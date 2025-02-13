@@ -24,7 +24,7 @@ export class ShortenerController {
     this.baseUrl = `http://${host}:${port}/`;
   }
 
-  @Post()
+  @Post('create-short')
   async createShortUrl(
     @Body('longUrl') longUrl: string,
   ): Promise<{ shortUrl: string }> {
@@ -42,7 +42,16 @@ export class ShortenerController {
       throw new NotFoundException('Short URL not found');
     }
 
-    // Перенаправление на длинный URL
     res.redirect(longUrl);
+  }
+
+  @Get('analytics/:shortId')
+  async getAnalytics(@Param('shortId') shortId: string) {
+    const analytics = await this.shortenerService.getAnalytics(shortId);
+    if (!analytics) {
+      throw new NotFoundException('Short URL not found');
+    }
+
+    return analytics;
   }
 }

@@ -12,4 +12,14 @@ model Url {
   shortId   String   @unique
   longUrl   String
   createdAt DateTime @default(now())
+  clicks    Click[]
+}
+
+model Click {
+  id        String   @id @default(uuid())
+  shortId   String
+  timestamp DateTime @default(now())
+  url       Url      @relation(fields: [shortId], references: [shortId])
+
+  @@index([shortId])
 }
